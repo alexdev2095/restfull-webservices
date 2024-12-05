@@ -1,4 +1,4 @@
-package com.sprintboot.restfull_webservices.entity;
+package com.sprintboot.restfull_webservices.models.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
