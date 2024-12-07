@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.sprintboot.restfull_webservices.dto.UserDto;
@@ -20,12 +21,19 @@ public class UserServiceImpl implements IUserService {
 
     private UserRepository userRepository;
 
+    private ModelMapper modelMapper;
+
     @Override
     public UserDto creatUser(UserDto userDto) {
 
-        User user = UserMapper.mapToUser(userDto);
+        // Convert UserDTO into User JPA Entity
+        // User user = UserMapper.mapToUser(userDto);
+        User user = modelMapper.map(userDto, User.class);
         User savedUser = userRepository.save(user);
-        UserDto savedUserDto = UserMapper.mapToUserDto(savedUser);
+
+        // Convert User JPA Entity into UserDTO
+        // UserDto savedUserDto = UserMapper.mapToUserDto(savedUser);
+        UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
 
         return savedUserDto;
     }
@@ -34,13 +42,17 @@ public class UserServiceImpl implements IUserService {
     public UserDto getUserById(Long id) {
         Optional<User> optionalUser = userRepository.findById(id);
         User user = optionalUser.get();
-        return UserMapper.mapToUserDto(user);
+        // return UserMapper.mapToUserDto(user);
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
     public List<UserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
-        return users.stream().map(UserMapper::mapToUserDto)
+        // return users.stream().map(UserMapper::mapToUserDto)
+        // .collect(Collectors.toList());
+
+        return users.stream().map((user) -> modelMapper.map(users, UserDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -51,7 +63,8 @@ public class UserServiceImpl implements IUserService {
         userExits.setLastName(user.getLastName());
         userExits.setEmail(user.getEmail());
         User updatUser = userRepository.save(userExits);
-        return UserMapper.mapToUserDto(updatUser);
+        // return UserMapper.mapToUserDto(updatUser);
+        return modelMapper.map(updatUser, UserDto.class);
     }
 
     @Override
