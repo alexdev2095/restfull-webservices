@@ -6,20 +6,16 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 
 import com.sprintboot.restfull_webservices.dto.UserDto;
-import com.sprintboot.restfull_webservices.exception.ErrorDetails;
-import com.sprintboot.restfull_webservices.exception.ResourceNotFoundException;
-import com.sprintboot.restfull_webservices.models.entity.User;
 import com.sprintboot.restfull_webservices.models.service.IUserService;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,7 +29,7 @@ public class UserController {
 
     // build create user API
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto user) {
+    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto user) {
         UserDto savedUser = userService.creatUser(user);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
@@ -51,7 +47,7 @@ public class UserController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody @Valid UserDto userDto) {
         userDto.setId(id);
         UserDto updatedUser = userService.updateUser(userDto);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
